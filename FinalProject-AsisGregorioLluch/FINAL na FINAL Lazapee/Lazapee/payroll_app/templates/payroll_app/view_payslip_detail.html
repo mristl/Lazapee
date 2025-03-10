@@ -1,0 +1,206 @@
+{% extends 'payroll_app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="col-4">
+        <a svg="arrow-left.svg" href="{% url 'payslip' %}" class="bi bi-arrow-left arrow-icon" style="color: #000; text-decoration: none;"> Back</a>
+    </div>
+</div>
+<div class="col-md-8">
+    <div class="row justify-content-between">
+        <div class="col-6 col-sm-3">
+            <p>
+                NAME: {{e.name}}
+            </p>
+            <p>
+                ID NUMBER: {{p.id_number.id_number}}
+            </p>
+        </div>
+        <div class="col-6 col-sm-3">
+            <p>
+                DATE: {{ p.month }} {{ p.date_range }}, {{ p.year }}
+            </p>
+            <p>
+                PAYSLIP ID: {{p.pk}}
+            </p>
+        </div>
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-6 col-sm-3">
+            <p>
+            </p>
+        </div>
+        <div class="col-4">
+            <b>
+                AMOUNT
+            </b>
+        </div>
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-6 col-sm-3">
+            <b>
+                EARNINGS:
+            </b>
+        </div>
+        <div class="col-4">
+            <p>
+            </p>
+        </div>
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-4" style="margin-left: 2%;">
+            <p>
+                Base Pay
+            </p>
+        </div>
+        <div class="col-6">
+            <p>
+                {{base_pay}}
+            </p>
+        </div>
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-4" style="margin-left: 2%;">
+            <p>
+                Allowances
+            </p>
+        </div>
+        <div class="col-6">
+            <p>
+                {{p.earnings_allowance}}
+            </p>
+        </div>
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-4" style="margin-left: 2%;">
+            <p>
+                Overtime
+            </p>
+        </div>
+        <div class="col-6">
+            <p>
+                {{p.overtime|floatformat:"1"}}
+            </p>
+        </div>
+    </div>
+    <hr>
+    <div class="row justify-content-between">
+        <div class="col-4" style="margin-left: 2%;">
+            <b>
+                GROSS PAY
+            </b>
+        </div>
+        <div class="col-4">
+            <b>
+                PHP {{gross_pay|floatformat:"1"}}
+            </b>
+        </div>
+    </div>
+    <hr>
+    <div class="row justify-content-between">
+        <div class="col-6 col-sm-3">
+            <b>
+                DEDUCTIONS:
+            </b>
+        </div>
+        <div class="col-4">
+            <p>
+            </p>
+        </div>
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-4" style="margin-left: 2%;">
+            <p>
+                WITHHOLDING TAX
+            </p>
+        </div>
+        <div class="col-6">
+            <p>
+                {{p.deductions_tax|floatformat:"1"}}
+            </p>
+        </div>
+    </div>
+    {% if p.pay_cycle == 1 %}
+    <div class="row justify-content-between">
+        <div class="col-4" style="margin-left: 2%;">
+            <p>
+                PAG-IBIG
+            </p>
+        </div>
+        <div class="col-6">
+            <p>
+                {{p.pag_ibig}}
+            </p>
+        </div>
+    </div>
+    {% else %}
+    <div class="row justify-content-between">
+        <div class="col-4" style="margin-left: 2%;">
+            <p>
+                PHILHEALTH
+            </p>
+        </div>
+        <div class="col-6">
+            <p>
+                {{p.deductions_health}}
+            </p>
+        </div>
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-4" style="margin-left: 2%;">
+            <p>
+                SSS
+            </p>
+        </div>
+        <div class="col-6">
+            <p>
+                {{p.sss}}
+            </p>
+        </div>
+    </div>
+    {% endif %}
+    <hr>
+    {% if p.pay_cycle == 1 %}
+    <div class="row justify-content-between">
+        <div class="col-4" style="margin-left: 2%;">
+            <b>
+                TOTAL DEDUCTIONS
+            </b>
+        </div>
+        <div class="col-4">
+            <b>
+                PHP {{total_deductions_1|floatformat:"1"}}
+            </b>
+        </div>
+    </div>
+    {% else %}
+    <div class="row justify-content-between">
+        <div class="col-4" style="margin-left: 2%;">
+            <b>
+                TOTAL DEDUCTIONS
+            </b>
+        </div>
+        <div class="col-4">
+            <b>
+                PHP {{total_deductions_2}}
+            </b>
+        </div>
+    </div>
+    {% endif %}
+    <hr>
+    <div class="row justify-content-between">
+        <div class="col-6 col-sm-3">
+            <h4>
+                NET PAY:
+            </h4>
+        </div>
+        <div class="col-4">
+            <h4>
+                PHP {{p.total_pay|floatformat:"1"}}
+            </h4>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Borrow Book</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .form-container { max-width: 1000px; margin: auto; }
+            .form-container h2 { text-align: center; }
+            .form-group { margin-bottom: 15px; }
+            label { display: block; font-weight: bold; margin-bottom: 5px; }
+            input[type="text"], input[type="number"] {
+                width: calc(100% - 20px);
+                padding: 8px;
+                margin: 5px 0;
+                box-sizing: border-box;
+            }
+            .btn {
+                display: block;
+                width: 100%;
+                padding: 10px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                cursor: pointer;
+                font-size: 16px;
+            }
+            .btn:hover { background-color: #45a049; }
+            .error { color: red; text-align: center; }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            th, td {
+                padding: 10px;
+                text-align: left;
+                border: 1px solid #ddd;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            .back-btn {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #2196F3;
+                color: white;
+                border: none;
+                cursor: pointer;
+                font-size: 16px;
+                text-decoration: none;
+                text-align: center;
+                margin-top: 20px;
+            }
+            .back-btn:hover {
+                background-color: #0b7dda;
+            }
+        </style>
+</head>
+
+
+
+
+<body>
+
+<div class="form-container">
+    <h2>Borrow a Book</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="accession_number">Accession Number:</label>
+            <input type="text" id="accession_number" name="accession_number" required>
+        </div>
+
+        <button type="submit" class="btn">Borrow Book</button>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+    </form>
+</div>
+
+<div>
+    {% if available_books %}
+        <h3>Available Books:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Accession Number</th>
+                    <th>Author</th>
+                    <th>Title</th>
+                    <th>Edition</th>
+                    <th>Volume</th>
+                    <th>Pages</th>
+                    <th>Publisher</th>
+                    <th>Year</th>
+                    <th>ISBN</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in available_books %}
+                    <tr>
+                        <td>{{book.accession_number}}</td>
+                        <td>{{ book.author }}</td>
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.edition }}</td>
+                        <td>{{ book.volume }}</td>
+                        <td>{{ book.pages }}</td>
+                        <td>{{ book.publisher }}</td>
+                        <td>{{ book.year }}</td>
+                        <td>{{ book.isbn }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No books available at the moment.</p>
+    {% endif %}
+</div>
+
+
+<div align="center">
+    <a href="{% url 'view books' %}" class="back-btn">View Borrowed Books</a>
+</div>
+
+</body>
+</html>
