@@ -1,0 +1,109 @@
+{% extends 'payroll_app/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="col-8">
+    <div class="row">
+        <div class="col-auto me-auto" style="color: #274c77;"><h1>Payroll Creation</h1></div>
+        <div class="card border-0" style="background-color: #dee2e6; color: #274c77;">
+            <div class="card-body">
+                <form method="POST" action="{% url 'create_payslip' %}">
+                    {% csrf_token %}
+                    <div class="row form-group">
+                        <div class ="col-4 form-group" style="margin-left: 10%; margin-right: 0%; padding-left: 20%;">
+                            <br>
+                            <label>Payroll for:</label>
+                        </div>
+                        <div class ="col-4 form-group">
+                            <select class="form-select mt-3" id="id_number" name="id_number" required>
+                                <option value = "" selected disabled>Choose...</option>
+                                <option value="All_Employees">All Employees</option>
+                                {% for e in employees %}
+                                <option value="{{e.id_number}}"> {{ e.id_number }} </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row form-group">
+                        <div class="col-4 form-group">
+                            <label for="month" class="mt-2">Month:</label>
+                            <select class="form-select" style="margin-right: 10%;" id="month" name="month" required>
+                                <option value = "" selected disabled>Choose...</option>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                        </div>
+                        <div class="col-4 form-group">
+                            <label for="year" class ="mt-2">Year:</label>
+                            <input type="text" class="form-control" id="year" aria-describedby="year" name="year" pattern="[0-9]{4}" title="Please enter a valid year (4 digits)" required>
+                        </div>
+                        <div class="col-4 form-group">
+                            <label for="pay_cycle" class ="mt-2">Cycle:</label>
+                            <select class="form-select" style="margin-right: 10%;" id="pay_cycle" name="pay_cycle" required>
+                                <option value = "" selected disabled>Choose...</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                            </select>
+                        </div>
+                    </div>
+                <br>
+                {% if messages %}
+                    {% for message in messages %}
+                        <p class="alert alert-{{ message.tags }}">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}  
+                <div class="col text-center">
+                    <button type="submit" class="btn btn-warning mt-4">Submit</button>
+                    <input type="reset" value="Reset" class="btn btn-secondary mt-4 ml-2" />
+                    <a href="{% url 'employees' %}" class="btn btn-secondary mt-4">Back</a>
+
+                </div>  
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-auto me-auto" style="color: #274c77;"><h1>Payslips Summary</h1></div>
+    </div>
+    <table class="table table-striped mb-5 table-hover">
+        <thead class="table" style="background-color: #005F99; color: #ffd500;">
+            <th scope="col"> ID Number </th>
+            <th scope="col"> Date </th>
+            <th scope="col"> Cycle </th>
+            <th scope="col"> Total Pay </th>
+            <th scope="col"> Options </th>
+        </thead>
+        <tbody>
+            {% for p in payslip %}
+            <tr>
+                <td> {{ p.id_number.id_number }} </td>
+                <td> {{ p.month }} {{ p.date_range }}, {{ p.year }} </td>
+                <td> {{ p.pay_cycle }} </td>
+                <td> {{ p.total_pay|floatformat:"1" }} </td>
+                <td>
+                    <div class="col mb-1">
+                        <a href="{% url 'view_payslip_detail' pk=p.pk %}"  class="btn btn-warning">Details</a>
+                        <a href="{% url 'delete_payslip' pk=p.pk %}" class="btn btn-warning" >Delete</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
